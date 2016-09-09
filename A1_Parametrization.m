@@ -13,7 +13,7 @@ clear
 clc
 %
 %==========================================================================
-% We set parameters for the process:
+% We set parameters for the process test:
 % ------------------------>!! PARAMETERS !!<-------------------------------
 % I create first a list of Tickers. I can import them from Excel.
 [~,ticks,~] = xlsread('Tickers.xlsx');

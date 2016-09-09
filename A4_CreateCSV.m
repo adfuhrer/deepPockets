@@ -5,8 +5,7 @@
 %--------------------------------------------------------------------------
 %                              Adrian Fuhrer
 %==========================================================================
-cd('/Users/adrian/Dropbox/MatlabForDeep')
-addpath(genpath('/Users/adrian/Dropbox/MatlabForDeep'))
+
 %==========================================================================
 close all
 clear
@@ -39,8 +38,8 @@ testSet = [];
 
 for y = 1900:2100
     disp(y);
-    if exist(strcat('Output/Year_',int2str(y),'.mat'), 'file') == 2
-        load(strcat('Output/Year_',int2str(y),'.mat'));
+    if exist(strcat(globals.outPutDirectory,'/Year_',int2str(y),'.mat'), 'file') == 2
+        load(strcat(globals.outPutDirectory,'/Year_',int2str(y),'.mat'));
     end
     if exist(['Y',int2str(y)],'var')
         if y < trainingVStest
@@ -84,7 +83,8 @@ trainingSet.Properties.VariableNames{'month'} = ['N',int2str(size(trainingSet,1)
 trainingSet.Properties.VariableNames{'Future'} = ['N',int2str(size(trainingSet,2)-1)];
 
 % saving to .csv, for the network to read:
-mkdir('homerun');
-writetable(trainingSet,strcat('homerun/training_full2014.csv'));
+homerunDirectory=strcat(globals.Datadir,'/homerun');
+mkdir(homerunDirectory);
+writetable(trainingSet,strcat(homerunDirectory,'/training_full2014.csv'));
 clear trainingSet
-writetable(testSet,strcat('homerun/test_full2014.csv'));
+writetable(testSet,strcat(homerunDirectory,'/test_full2014.csv'));

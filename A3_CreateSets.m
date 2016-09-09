@@ -5,8 +5,7 @@
 %--------------------------------------------------------------------------
 %                              Adrian Fuhrer
 %==========================================================================
-cd('/Users/adrian/Dropbox/MatlabForDeep')
-addpath(genpath('/Users/adrian/Dropbox/MatlabForDeep'))
+
 %==========================================================================
 close all
 clear
@@ -45,7 +44,8 @@ isExcel = false;
 firstYear = 2100;
 lastYear = 0;
 
-mkdir('Output')
+
+mkdir(globals.globals.outPutDirectory);
 % Now I loop through all of the tickers and download data:
 readVarNames = true; % This is to only read the strings in the first file. For all consecutive Files, it is assumed the same.
 for p=0:(packages-1)
@@ -105,7 +105,7 @@ disp('Saving Price-Data per year:');
 for y = firstYear:lastYear
     disp(y);
     if exist(['Y',int2str(y)],'var')
-        save(strcat('Output/Year_',int2str(y),'.mat'),['Y',int2str(y)],'-v7.3');
+        save(strcat(globals.outPutDirectory,'/Year_',int2str(y),'.mat'),['Y',int2str(y)],'-v7.3');
     end
 end
 
@@ -113,8 +113,8 @@ clearvars -except firstYear lastYear
 disp('Using Price-Data to compute and save all Data per year:');
 for y = firstYear:lastYear
     disp(y);
-    if exist(strcat('Output/Year_',int2str(y),'.mat'), 'file') == 2
-        load(strcat('Output/Year_',int2str(y),'.mat'));
+    if exist(strcat(globals.outPutDirectory,'/Year_',int2str(y),'.mat'), 'file') == 2
+        load(strcat(globals.outPutDirectory,'/Year_',int2str(y),'.mat'));
     end
     if exist(['Y',int2str(y)],'var')
         eval(['Y',int2str(y),'.Returns = getReturns(Y',int2str(y),'.Data);']);
@@ -123,7 +123,7 @@ for y = firstYear:lastYear
         eval(['Y',int2str(y),'.MVCulmReturns = getMeanVariance(Y',int2str(y),'.CulmReturns);']);
         eval(['Y',int2str(y),'.ZScoreReturns = getZScore(Y',int2str(y),'.Returns, Y',int2str(y),'.MVReturns);']);
         eval(['Y',int2str(y),'.ZScoreCulmReturns = getZScore(Y',int2str(y),'.CulmReturns, Y',int2str(y),'.MVCulmReturns);']);
-        save(strcat('Output/Year_',int2str(y),'.mat'),['Y',int2str(y)],'-v7.3');
+        save(strcat(globals.outPutDirectory,'/Year_',int2str(y),'.mat'),['Y',int2str(y)],'-v7.3');
         clearvars -except y firstYear lastYear
     end
 end

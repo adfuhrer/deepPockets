@@ -1,0 +1,3 @@
+setUpDataDir;
+
+addpath(genpath('./'));

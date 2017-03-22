@@ -1,3 +1,0 @@
-setUpDataDir;
-
-addpath(genpath('./'));

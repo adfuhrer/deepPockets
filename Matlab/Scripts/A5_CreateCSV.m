@@ -150,5 +150,7 @@ writetable(testSet,strcat('homerun/test',params.nameSuffixOfSet{1},'.csv'));
 %}
 %==========================================================================
 % NEW, directly to .mat:
-save(strcat('homerun/training',params.nameSuffixOfSet{1},'.mat'),'trainingSet','-v7.3');
-save(strcat('homerun/test',params.nameSuffixOfSet{1},'.mat'),'trainingSet','-v7.3');
+if patams.STORE_DOT_MAT{1}
+    save(strcat('homerun/training',params.nameSuffixOfSet{1},'.mat'),'trainingSet','-v7.3');
+    save(strcat('homerun/test',params.nameSuffixOfSet{1},'.mat'),'trainingSet','-v7.3');
+end

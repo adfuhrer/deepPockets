@@ -30,7 +30,7 @@ DATA_SAVE_PATH = '/Users/adrian/switchdrive/Adrian Fuhrer/3 Business Projekte/De
 % DATA_SAVE_PATH = % Set a scond one that can be easily commented/uncomm.
 % -- This is to control wether a .mat file is of the set is stored in the
 %       end (at any rate, the set will be available in the heap at the end)
-STORE_DOT_MAT = True;
+STORE_DOT_MAT = true;
 %--------------------------------------------------------------------------
 % SPECIFYING FEATURES:
 % -- How many individual sheets were downloaded form Datastream?

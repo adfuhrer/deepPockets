@@ -5,7 +5,7 @@
 %--------------------------------------------------------------------------
 %                              Adrian Fuhrer
 %==========================================================================
-FOLDER_NAME = pwd;
+FOLDER_NAME = strrep(mfilename('fullpath'),mfilename,'');
 cd(FOLDER_NAME)
 addpath(genpath(FOLDER_NAME))
 %==========================================================================
@@ -37,7 +37,14 @@ criticalValue = params.criticalValue{1};
 varNames = params.VarNames{1};
 %firstYear = params.firstYear;
 %lastYear = params.lastYear;
-%
+
+% Here, I add the path where the data is stored to the searchpath:
+%   DON'T FORGET TO CHAGE BACK!! (This is why I save it in FOLDER_NAME)
+FOLDER_NAME = pwd;
+cd(DATA_SAVE_PATH)
+addpath(genpath(DATA_SAVE_PATH))
+
+% ---------------------->!! INITIALIZATION !!<-----------------------------
 trainingSet = [];
 testSet = [];
 
@@ -116,9 +123,15 @@ for y = 1900:2100%firstYear:lastYear
         clearvars -except y trainingVStest trainingSet testSet criticalValue params
     end
 end
+
+% I do not do this anymore. It consumes way to many resources for what it
+% actually is. I do no longer save to csv, but only store it as a .mat
+% file.
+%==========================================================================
+%{ 
 testSet = cell2table(num2cell(testSet));
 trainingSet = cell2table(num2cell(trainingSet));
-
+ 
 if size(testSet,2)>2 
     testSet.Properties.VariableNames{'Var1'} = ['N',int2str(size(testSet,1))];
     testSet.Properties.VariableNames{'Var2'} = ['N',int2str(size(testSet,2)-1)];
@@ -134,3 +147,8 @@ mkdir('homerun');
 writetable(trainingSet,strcat(['homerun/training',params.nameSuffixOfSet{1},'.csv']));
 clear trainingSet
 writetable(testSet,strcat('homerun/test',params.nameSuffixOfSet{1},'.csv'));
+%}
+%==========================================================================
+% NEW, directly to .mat:
+save(strcat('homerun/training',params.nameSuffixOfSet{1},'.mat'),'trainingSet','-v7.3');
+save(strcat('homerun/test',params.nameSuffixOfSet{1},'.mat'),'trainingSet','-v7.3');

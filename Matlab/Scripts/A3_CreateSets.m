@@ -5,7 +5,7 @@
 %--------------------------------------------------------------------------
 %                              Adrian Fuhrer
 %==========================================================================
-FOLDER_NAME = pwd;
+FOLDER_NAME = strrep(mfilename('fullpath'),mfilename,'');
 cd(FOLDER_NAME)
 addpath(genpath(FOLDER_NAME))
 %==========================================================================
@@ -30,6 +30,13 @@ isExcel     = false;
 firstYear   = 2100;  % Since I use the min-function, I just set it high.
 lastYear    = 0;     % Since I use the max-function, I just set it low.
 
+% Here, I add the path where the data is stored to the searchpath:
+%   DON'T FORGET TO CHAGE BACK!! (This is why I save it in FOLDER_NAME)
+FOLDER_NAME = pwd;
+cd(DATA_SAVE_PATH)
+addpath(genpath(DATA_SAVE_PATH))
+
+% ---------------------->!! INITIALIZATION !!<-----------------------------
 mkdir('Output')
 
 % We determine, which years we need to consider:
@@ -40,6 +47,7 @@ for p = 1:packages
     lastYear = max([packCollection(:,3);lastYear]);
     clear packCollection
 end
+% -------------------------->!! LOOP !!<-----------------------------------
 % Then, for every year, we loop through all packages and extract the
 % relevant data, collect it and save the set. Then delete everything and
 % start over.
@@ -63,6 +71,9 @@ for y = firstYear:lastYear
     % Now we need to save the set for every year:
     save(strcat('Output/Year_',int2str(y),'.mat'),'cSet');
 end
+
+cd(FOLDER_NAME)
+addpath(genpath(FOLDER_NAME))
 params.firstYear = firstYear;
 params.lastYear = lastYear;
 save('params.mat','params');

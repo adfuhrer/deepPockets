@@ -5,7 +5,7 @@
 %--------------------------------------------------------------------------
 %                              Adrian Fuhrer
 %==========================================================================
-FOLDER_NAME = pwd;
+FOLDER_NAME = strrep(mfilename('fullpath'),mfilename,'');
 cd(FOLDER_NAME)
 addpath(genpath(FOLDER_NAME))
 %==========================================================================
@@ -19,7 +19,14 @@ load('params');
 firstYear = params.firstYear;
 lastYear = params.lastYear;
 disp('Using Price-Data to compute and save all Data per year:');
+
+% Here, I add the path where the data is stored to the searchpath:
+cd(DATA_SAVE_PATH)
+addpath(genpath(DATA_SAVE_PATH))
+
+% ---------------------->!! INITIALIZATION !!<-----------------------------
 nanMonitor = [(firstYear:lastYear)', nan(lastYear-firstYear+1,2)];
+% -------------------------->!! LOOP !!<-----------------------------------
 for y = firstYear:lastYear
     disp(y);
     if exist(strcat('Output/Year_',int2str(y),'.mat'), 'file') == 2

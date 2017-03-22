@@ -5,7 +5,7 @@
 %--------------------------------------------------------------------------
 %                              Adrian Fuhrer
 %==========================================================================
-FOLDER_NAME = pwd;
+FOLDER_NAME = strrep(mfilename('fullpath'),mfilename,'');
 cd(FOLDER_NAME)
 addpath(genpath(FOLDER_NAME))
 %==========================================================================
@@ -16,6 +16,18 @@ clc
 %==========================================================================
 % We set parameters for the process:
 % ------------------------>!! PARAMETERS !!<-------------------------------
+% GENERAL SETTINGS:
+% -- In what folder is the data stored? Temporary data will be stored here
+%       as well. It should be a local path.
+%       In this folder, three subfolders will be created:
+%           -    Temp: contains the data in the new 'packages' format, as
+%                specified within this script (days, weeks, months)
+%           -  Output: contains the data transformed to returns, culReturns,
+%                z-scores of both and as raw data, grouped by years.
+%           - homerun: contains the final datasets in the .mat format. They
+%                will then be used in the network.
+DATA_SAVE_PATH = '/Users/adrian/switchdrive/Adrian Fuhrer/3 Business Projekte/Deep Pockets/Matlab/Data';
+% DATA_SAVE_PATH = % Set a scond one that can be easily commented/uncomm.
 %--------------------------------------------------------------------------
 % SPECIFYING FEATURES:
 % -- How many individual sheets were downloaded form Datastream?
@@ -90,10 +102,10 @@ noConsMonths = (noDailyObs-unassignedDays)/minTradingDays ...
     + ceil((futureUnit == 'w')*futureStep/4) ...
     + ceil((futureUnit == 'd')*futureStep/minTradingDays);
 
-paramsData = [NR_DOWNLOADED_FILES, PACKS_PER_OUTPUT_TABLE, minTradingDays, noDailyObs, noWeeklyObs, noMonthlyObs, ...
+paramsData = [DATA_SAVE_PATH, NR_DOWNLOADED_FILES, PACKS_PER_OUTPUT_TABLE, minTradingDays, noDailyObs, noWeeklyObs, noMonthlyObs, ...
     {futureUnit}, futureStep, noConsMonths, date, minPrice, maxGR, maxNonVariationDays, cutoffYear, criticalValue, ...
     nameSuffixOfSet];
-paramsNames = {'NR_DOWNLOADED_FILES' 'PACKS_PER_OUTPUT_TABLE' 'minTradingDays' 'noDailyObs' 'noWeeklyObs' ...
+paramsNames = {'DATA_SAVE_PATH' 'NR_DOWNLOADED_FILES' 'PACKS_PER_OUTPUT_TABLE' 'minTradingDays' 'noDailyObs' 'noWeeklyObs' ...
     'noMonthlyObs' 'futureUnit' 'futureStep' 'noConsMonths' 'date' 'minPrice' 'maxGR' 'maxNonVariationDays' ...
     'cutoffYear' 'criticalValue' 'nameSuffixOfSet'};
 params = array2table(paramsData,'VariableNames',paramsNames);
@@ -109,16 +121,17 @@ save('params.mat','params');
 % I can now try to call the different scripts from right here. This allows
 % for a lot of freedom: I run this script and end up with a finished
 % Dataset! 
+% If not all steps are needed, feel free to comment out any script-calls.
 tic
-%disp('Starting to repackage the raw date according to the parametrization...')
-%run('A2_Import.m')
-%toc
-%disp('Sorting packages by months and years to get relative performance measures...')
-%run('A3_CreateSets.m')
-%toc
-%disp('Computing relative performance measures...')
-%run('A4_ComputeReturns.m')
-%toc
+disp('Starting to repackage the raw date according to the parametrization...')
+run('A2_Import.m')
+toc
+disp('Sorting packages by months and years to get relative performance measures...')
+run('A3_CreateSets.m')
+toc
+disp('Computing relative performance measures...')
+run('A4_ComputeReturns.m')
+toc
 disp('Writing the dataset to file...')
 run('A5_CreateCSV.m')
 toc

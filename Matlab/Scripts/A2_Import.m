@@ -5,7 +5,7 @@
 %--------------------------------------------------------------------------
 %                              Adrian Fuhrer
 %==========================================================================
-FOLDER_NAME = pwd;
+FOLDER_NAME = strrep(mfilename('fullpath'),mfilename,'');
 cd(FOLDER_NAME)
 addpath(genpath(FOLDER_NAME))
 %==========================================================================
@@ -49,7 +49,12 @@ load('params');
 noConsMonths            = params.noConsMonths{1};
 numberOfDownloadedFiles = params.NR_DOWNLOADED_FILES{1};
 packsPerOutputTable     = params.PACKS_PER_OUTPUT_TABLE{1};
-%   I initialize empty sets to collect the data:
+DATA_SAVE_PATH          = params.DATA_SAVE_PATH{1};
+% Here, I add the path where the data is stored to the searchpath:
+%   DON'T FORGET TO CHAGE BACK!! (This is why I save it in FOLDER_NAME)
+FOLDER_NAME = pwd;
+cd(DATA_SAVE_PATH)
+addpath(genpath(DATA_SAVE_PATH))
 % ---------------------->!! INITIALIZATION !!<-----------------------------
 % initializing running variable(s):
 p = 1;
@@ -113,10 +118,13 @@ for f=1:numberOfDownloadedFiles
     end
 end
 display(['Writing to file. (Table: ' num2str(p) ', last)'])
-params.packages = p;
-save('params.mat','params');
 % I could export to .csv, if for some reason we would want it to be usable
 % outside matlab. Default is saving in matlab format.
 %writetable(packCollection,strcat('Temp/Table_',int2str(p),'.csv'));
 mkdir('Temp')
 save(strcat('Temp/Table_',int2str(p),'.mat'),'packCollection');
+
+cd(FOLDER_NAME)
+addpath(genpath(FOLDER_NAME))
+params.packages = p;
+save('params.mat','params');

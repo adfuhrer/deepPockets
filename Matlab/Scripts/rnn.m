@@ -1,8 +1,8 @@
 %do parametrization
-A1_Parametrization;
 
+file = load('training_newWithFutureValue.mat');
+trainingSet = file.trainingSet;
 %use data to build rnn
-
 net = layrecnet(1:2,38);
 %get labels from training set
 labels = trainingSet(:,end-1);

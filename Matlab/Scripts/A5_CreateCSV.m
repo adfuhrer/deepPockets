@@ -41,8 +41,8 @@ varNames = params.VarNames{1};
 % Here, I add the path where the data is stored to the searchpath:
 %   DON'T FORGET TO CHAGE BACK!! (This is why I save it in FOLDER_NAME)
 FOLDER_NAME = pwd;
-cd(DATA_SAVE_PATH)
-addpath(genpath(DATA_SAVE_PATH))
+cd(params.DATA_SAVE_PATH{1})
+addpath(genpath(params.DATA_SAVE_PATH{1}))
 
 % ---------------------->!! INITIALIZATION !!<-----------------------------
 trainingSet = [];
@@ -150,7 +150,8 @@ writetable(testSet,strcat('homerun/test',params.nameSuffixOfSet{1},'.csv'));
 %}
 %==========================================================================
 % NEW, directly to .mat:
-if patams.STORE_DOT_MAT{1}
+mkdir('homerun');
+if params.STORE_DOT_MAT{1}
     save(strcat('homerun/training',params.nameSuffixOfSet{1},'.mat'),'trainingSet','-v7.3');
-    save(strcat('homerun/test',params.nameSuffixOfSet{1},'.mat'),'trainingSet','-v7.3');
+    save(strcat('homerun/test',params.nameSuffixOfSet{1},'.mat'),'testSet','-v7.3');
 end

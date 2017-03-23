@@ -21,8 +21,8 @@ lastYear = params.lastYear;
 disp('Using Price-Data to compute and save all Data per year:');
 
 % Here, I add the path where the data is stored to the searchpath:
-cd(DATA_SAVE_PATH)
-addpath(genpath(DATA_SAVE_PATH))
+cd(params.DATA_SAVE_PATH{1})
+addpath(genpath(params.DATA_SAVE_PATH{1}))
 
 % ---------------------->!! INITIALIZATION !!<-----------------------------
 nanMonitor = [(firstYear:lastYear)', nan(lastYear-firstYear+1,2)];

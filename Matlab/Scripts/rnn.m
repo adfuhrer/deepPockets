@@ -1,6 +1,6 @@
 %do parametrization
-
-file = load('training_newWithFutureValue.mat');
+load('params.mat');
+load('training_newWithFutureValue.mat');
 trainingSet = file.trainingSet;
 %use data to build rnn
 net = layrecnet(1:2,38);

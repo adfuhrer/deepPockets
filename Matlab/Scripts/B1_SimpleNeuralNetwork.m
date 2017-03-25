@@ -75,12 +75,33 @@ load('test_newWithFutureValue.mat')
 % on columns, not lines.
 featuresTest = testSet(:,1:35)';
 labelUpDownTest = testSet(:,39);%labelUpTest = (testSet(:,39)'==1);
+returns = testSet(:,end);
 %labelDownTest = not(labelUpTest);
 %labelUpDownTest = [labelUpTest;labelDownTest];
 clear testSet
 
 y = deepnet(featuresTest);
 % I scale y by the prior probabilities:
-y = (y.*0.5)./(mean(labelUpDownTest));
+%y = (y.*0.5)./(mean(labelUpDownTest));
 
 plotconfusion(labelUpDownTest',y);
+returns2=returns';
+returns2(returns>1)=0;
+
+scatter(returns2,y)
+
+% fit the regression, return the coeffs and their se's
+stats = regstats(y,returns2,'linear',{'tstat','yhat'})
+betahat = stats.tstat.beta
+betaSE = stats.tstat.se
+
+% compute r-squared
+yhat = stats.yhat;
+RSS = sum((yhat-mean(y)).^2); % regression sum of squares
+TSS = sum((y-mean(y)).^2); % total sum of squares
+rsquared = RSS ./ TSS
+r = sqrt(rsquared)
+
+figure;
+scatter(returns2,y);
+lsline

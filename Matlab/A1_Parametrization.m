@@ -26,8 +26,8 @@ clc
 %                z-scores of both and as raw data, grouped by years.
 %           - homerun: contains the final datasets in the .mat format. They
 %                will then be used in the network.
-DATA_SAVE_PATH = '/Users/adrian/switchdrive/Adrian Fuhrer/3 Business Projekte/Deep Pockets/Matlab/Data';
-% DATA_SAVE_PATH = % Set a scond one that can be easily commented/uncomm.
+DATA_SAVE_PATH = '/Users/adrian/Deep Pockets/Matlab/Data';
+% DATA_SAVE_PATH = % Set a second one that can be easily commented/uncomm.
 % -- This is to control wether a .mat file is of the set is stored in the
 %       end (at any rate, the set will be available in the heap at the end)
 STORE_DOT_MAT = true;

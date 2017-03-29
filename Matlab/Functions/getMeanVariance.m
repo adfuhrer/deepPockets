@@ -14,12 +14,14 @@ for m=1:12
     if not(isempty(monthIndex))
         meanMat = set(monthIndex(1,1),:);
         varMat = meanMat;
+        medianMat = meanMat;
         for n = 2:((size(set,2)-2)/2)
             k = 2*n;
             meanMat(1,k) = mean(set(monthIndex,k));
             varMat(1,k) = var(set(monthIndex,k));
+            medianMat(1,k) = median(set(monthIndex,k));
         end
-        tempData = [{'mean';'variance'}, num2cell([meanMat;varMat])];
+        tempData = [{'mean';'variance';'median'}, num2cell([meanMat;varMat;medianMat])];
         finalData = [finalData; tempData];
     end
 end

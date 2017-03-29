@@ -81,7 +81,7 @@ maxNonVariationDays = 5;
 %    'cutoffYear' goes into the training, everything after into the test 
 %    set.
 cutoffYear = 2014;
-nameSuffixOfSet = '_newWithFutureValue';
+nameSuffixOfSet = '_newMedian';
 
 %--------------------------------------------------------------------------
 % SPECIFYING CLASSIFICATION:
@@ -126,12 +126,12 @@ save('params.mat','params');
 % Dataset! 
 % If not all steps are needed, feel free to comment out any script-calls.
 tic
-disp('Starting to repackage the raw date according to the parametrization...')
-run('A2_Import.m')
-toc
-disp('Sorting packages by months and years to get relative performance measures...')
-run('A3_CreateSets.m')
-toc
+%disp('Starting to repackage the raw date according to the parametrization...')
+%run('A2_Import.m')
+%toc
+%disp('Sorting packages by months and years to get relative performance measures...')
+%run('A3_CreateSets.m')
+%toc
 disp('Computing relative performance measures...')
 run('A4_ComputeReturns.m')
 toc

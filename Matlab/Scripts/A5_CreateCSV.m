@@ -85,6 +85,19 @@ for y = 1900:2100%firstYear:lastYear
         MoYear = Returns(:,1:2);
         %-3 Dummy if it goes up (C4)
         Up = (Returns(:,4) > 0);
+        load(strcat('Output/Year_',int2str(y),'MVReturns.mat'));
+        MVMMatrix = cell2mat(table2array(MVMReturns(:,2:end)));
+        medians = MVMMatrix(3:3:end,[1,4]);
+        medianss = NaN(12,2);
+        for m=1:12
+            if sum(medians(:,1)==m)==0
+                medianss(m,:) = NaN(1,2);
+            else
+                medianss(m,:) = medians(medians(:,1)==m,:);
+            end
+        end
+        medianss = medianss(Returns(:,1),2);
+        AboveMedian = (Returns(:,4)>medianss);
         ReturnsColumn = Returns(:,4);   % <---------- FOR PIXEL!!
         clear Returns
         
@@ -112,7 +125,7 @@ for y = 1900:2100%firstYear:lastYear
         dataPoints = ZScoreCulmReturns(:,indices);
         
         % Putting it all together:               FOR PIXEL---|____________
-        temp = [dataPoints, UniqueID, MoYear, Up, bestOrWorst, ReturnsColumn];
+        temp = [dataPoints, UniqueID, MoYear, Up, bestOrWorst, ReturnsColumn, AboveMedian];
         if test 
             testSet = [testSet;temp];
         else

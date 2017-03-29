@@ -28,19 +28,19 @@ load('training_newWithFutureValue.mat')
 % on columns, not lines.
 features = trainingSet(:,1:35)';
 %labelUpDown = trainingSet(:,39);
-%labelTopFlop = trainingSet(:,40);
-%labelTopFlop = [(labelTopFlop==0), (labelTopFlop==1), (labelTopFlop==2)];
-labelMedian = trainingSet(:,42);
+labelTopFlop = trainingSet(:,40);
+labelTopFlop = [
+
 clear trainingSet labelUp labelDown
 
 %--------------------------------------------------------------------------
 %%                   GENERATING AN EMPTY NETWORK
-deepnet = patternnet([400 190 140 200 50 10]);
+deepnet = patternnet([50 10]);%([1000 500 250 190 140 200 50 10]);
 view(deepnet)
 
 %%--------------------------------------------------------------------------
 %%                   TRAINING THE NETWORK (supervised)
-deepnet = train(deepnet,features,labelMedian');
+deepnet = train(deepnet,features,labelTopFlop');
 
 
 %%--------------------------------------------------------------------------
@@ -52,10 +52,8 @@ load('test_newWithFutureValue.mat')
 % on columns, not lines.
 featuresTest = testSet(:,1:35)';
 %labelUpDownTest = testSet(:,39);%labelUpTest = (testSet(:,39)'==1);
-%labelTopFlopTest = testSet(:,40);
-%labelTopFlopTest = [(labelTopFlopTest==0), (labelTopFlopTest==1), (labelTopFlopTest==2)];
-labelMedianTest = testSet(:,42);
-returns = testSet(:,end-1);
+labelTopFlopTest = testSet(:,38);
+returns = testSet(:,end);
 %labelDownTest = not(labelUpTest);
 %labelUpDownTest = [labelUpTest;labelDownTest];
 clear testSet
@@ -64,7 +62,7 @@ y = deepnet(featuresTest);
 % I scale y by the prior probabilities:
 %y = (y.*0.5)./(mean(labelUpDownTest));
 
-plotconfusion(labelMedianTest',y);
+plotconfusion(labelTopFlopTest',y);
 returns2=returns';
 returns2(returns>1)=0;
 
@@ -80,11 +78,11 @@ TSS = sum((y-mean(y)).^2); % total sum of squares
 rsquared = RSS ./ TSS
 
 figure;
-scatter(returns2(y>0.53 & not(returns2==0)),y(y>0.53 & not(returns2==0)));
+scatter(returns2(y>0.55),y(y>0.55));
 lsline
 
 % fit the regression, return the coeffs and their se's
-stats = regstats(y(y>0.53),returns2(y>0.53),'linear',{'tstat','yhat'})
+stats = regstats(y(y>0.55),returns2(y>0.55),'linear',{'tstat','yhat'})
 betahat = stats.tstat.beta
 betaSE = stats.tstat.se
 

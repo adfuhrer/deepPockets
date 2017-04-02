@@ -35,7 +35,7 @@ clear trainingSet labelUp labelDown
 
 %--------------------------------------------------------------------------
 %%                   GENERATING AN EMPTY NETWORK
-deepnet = patternnet([400 190 140 200 50 10]);
+deepnet = patternnet([400 250 140 200 50 10]);
 view(deepnet)
 
 %%--------------------------------------------------------------------------

@@ -1,5 +1,17 @@
 function indicators = getValidityOfMonths(array, params)
 
+% This function takes in a cell array of matrices, where each matrix
+% represents a unique month-year combination of time series data and is a 
+% [mx4]-matrix, where m is the number of trading days in that month and
+% the first coulmn being the month, the second being the year, the third
+% being the date (the first and second coumn map directly to that date) and
+% the forth is the time-series data.
+% It returns a boolean array for every month-year combination, indicating
+% if that month-year combination meets certain criteria. The criteria
+% tested are the following:
+%   - if a given minimum number of trading days is available for that month
+%   - if the time series value drops below a certain threshold
+%   - if there is more than a certain number of days with no trades
 ind = zeros(length(array),1);
 
 for i=1:length(array)

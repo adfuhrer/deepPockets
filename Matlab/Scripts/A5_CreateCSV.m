@@ -6,6 +6,16 @@
 %                              Adrian Fuhrer
 %==========================================================================
 FOLDER_NAME = strrep(mfilename('fullpath'),mfilename,'');
+if ismac
+    backslashes = strfind(FOLDER_NAME,'/');
+elseif isunix
+    backslashes = strfind(FOLDER_NAME,'/');
+elseif ispc
+    backslashes = strfind(FOLDER_NAME,'\');
+else
+    disp('Platform not supported')
+end
+FOLDER_NAME = FOLDER_NAME(1:backslashes(end-1));
 cd(FOLDER_NAME)
 addpath(genpath(FOLDER_NAME))
 %==========================================================================
@@ -21,7 +31,7 @@ clear
 %==========================================================================
 % I load all the parameters form the Matlab Searchpath.
 load('params');
-
+secs = load('SecToSets.mat');
 %==========================================================================
 
 % I use the naming convention estabilshed before to get all the data in.
@@ -47,16 +57,31 @@ addpath(genpath(params.DATA_SAVE_PATH{1}))
 % ---------------------->!! INITIALIZATION !!<-----------------------------
 trainingSet = [];
 testSet = [];
+secs = secs.secToSets;
+nrRandomSets = max(secs(:,4));
+nrChosenSets = max(secs(:,5));
+for rs=1:nrRandomSets
+    randomSetCollection{rs}=[];
+end
+for cs=1:nrChosenSets
+    chosenSetCollection{cs}=[];
+end
+
 
 for y = 1900:2100%firstYear:lastYear
     if exist(strcat('Output/Year_',int2str(y),'.mat'), 'file') == 2
         disp(y);
-        if y < trainingVStest
-            test = false;
-        else
-            test = true;
-        end
-   
+        
+        %------ OLD ----------
+        %if y < trainingVStest
+        %    test = false;
+        %else
+        %    test = true;
+        %end
+        %------ New ----------
+        % Dividing into multiple Test Sets, see below
+        
+        
         % Here we consruct the set. Any changes can be directly implemented
         % in this block:
         %==================================================================
@@ -126,14 +151,22 @@ for y = 1900:2100%firstYear:lastYear
         
         % Putting it all together:               FOR PIXEL---|____________
         temp = [dataPoints, UniqueID, MoYear, Up, bestOrWorst, ReturnsColumn, AboveMedian];
-        if test 
-            testSet = [testSet;temp];
-        else
-            trainingSet = [trainingSet;temp];
+        
+        % Matching in the Information on the sets:
+        [~,rowsOfSecs] = ismember(temp(:,36),secs(:,1)); %Change if poition of ID cahnges
+        temp = [temp, secs(rowsOfSecs,4:end)];
+        killCols = size(secs(rowsOfSecs,4:end),2);
+        
+        for rs=1:nrRandomSets
+            randomSetCollection{rs}=[randomSetCollection{rs};temp(temp(:,end-2)==rs,1:end-killCols)];
         end
+        for cs=1:nrChosenSets
+            chosenSetCollection{cs}=[chosenSetCollection{cs};temp(temp(:,end-1)==cs,:)];
+        end
+        trainingSet = [trainingSet;temp(temp(:,end)==1,:)];
         
         %==================================================================
-        clearvars -except y trainingVStest trainingSet testSet criticalValue params
+        clearvars -except y trainingVStest trainingSet chosenSetCollection randomSetCollection criticalValue params secs nrRandomSets nrChosenSets
     end
 end
 
@@ -165,6 +198,13 @@ writetable(testSet,strcat('homerun/test',params.nameSuffixOfSet{1},'.csv'));
 % NEW, directly to .mat:
 mkdir('homerun');
 if params.STORE_DOT_MAT{1}
+    for i=1:size(randomSetCollection,2)
+        randomSet = randomSetCollection{i}; 
+        save(strcat('homerun/random',params.nameSuffixOfSet{1},'_',int2str(i),'.mat'),'randomSet','-v7.3');
+    end
+    for i=1:size(chosenSetCollection,2)
+        chosenSet = chosenSetCollection{i}; 
+        save(strcat('homerun/chosen',params.nameSuffixOfSet{1},'_',int2str(i),'.mat'),'chosenSet','-v7.3');
+    end
     save(strcat('homerun/training',params.nameSuffixOfSet{1},'.mat'),'trainingSet','-v7.3');
-    save(strcat('homerun/test',params.nameSuffixOfSet{1},'.mat'),'testSet','-v7.3');
 end

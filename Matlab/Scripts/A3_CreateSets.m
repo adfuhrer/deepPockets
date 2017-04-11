@@ -6,6 +6,16 @@
 %                              Adrian Fuhrer
 %==========================================================================
 FOLDER_NAME = strrep(mfilename('fullpath'),mfilename,'');
+if ismac
+    backslashes = strfind(FOLDER_NAME,'/');
+elseif isunix
+    backslashes = strfind(FOLDER_NAME,'/');
+elseif ispc
+    backslashes = strfind(FOLDER_NAME,'\');
+else
+    disp('Platform not supported')
+end
+FOLDER_NAME = FOLDER_NAME(1:backslashes(end-1));
 cd(FOLDER_NAME)
 addpath(genpath(FOLDER_NAME))
 %==========================================================================

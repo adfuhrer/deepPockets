@@ -21,6 +21,13 @@ futureDayOfMonth = 1 + ... If we have a monthly unit, we always take the last da
     + (futureUnit == 'w')*not(rem(futureStep,4)==0)*((4-rem(futureStep,4))*5) ... Depending on 0,1,2,3 weeks left, we start 1, 16, 11, 6 days after end.
     + (futureUnit == 'd')*not(rem(futureStep,minTradingDays)==0)*(minTradingDays - rem(futureStep,minTradingDays));
 
+% Instead of recoding the entire thing, I just flip the cellArray (the time
+% direction has changed when migrating from Yahoo Finance to DataStream.
+cellArray = flipud(cellArray);
+for i=1:length(cellArray)
+    cellArray{i}=flipud(cellArray{i});
+end
+
 pack = nan(1,packageLength);
 
 posC = 1; % position Counter
@@ -37,7 +44,7 @@ if max(abs(interMonthsGR))<=params.maxGR{1}
         pack(1,posC) = UniqueIdKey;
     posC = posC + 1;
         pack(1,posC) = cellArray{1 + futureMonths}(1,1);
-    posC = posC + 1;
+    posC = posC + 1;                                        
         pack(1,posC) = cellArray{1 + futureMonths}(1,2);
     posC = posC + 1;
         pack(1,posC) = cellArray{1}(futureDayOfMonth,3);

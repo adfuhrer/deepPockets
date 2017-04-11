@@ -2,6 +2,7 @@ function d = getMonths(array)
 
 % This function takes a [nx2]-matrix of time-series data, with the dates in
 % the Matlab Date Format in column 1 and the time-series data in column 2.
+% Dates do not have to be continuous.
 % It retuns a cell array of matrices with each matrix containing the
 % time-series data for one unique year - month combination. All of the data
 % is returned, packaged into monthly packs, with the packs being
